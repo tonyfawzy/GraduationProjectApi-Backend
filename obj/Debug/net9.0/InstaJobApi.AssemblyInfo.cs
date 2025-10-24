@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InstaJobApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d31ffa28ad1ceebe98a4f940cef372a4b1814acd")]
 [assembly: System.Reflection.AssemblyProductAttribute("InstaJobApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InstaJobApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
