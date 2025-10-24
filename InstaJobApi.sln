@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaJobApi", "InstaJobApi.csproj", "{BDAA4171-13D2-63FA-7E37-574872D17751}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BDAA4171-13D2-63FA-7E37-574872D17751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDAA4171-13D2-63FA-7E37-574872D17751}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDAA4171-13D2-63FA-7E37-574872D17751}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDAA4171-13D2-63FA-7E37-574872D17751}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2CB4F69A-2788-439A-AFB0-A2771703D419}
+	EndGlobalSection
+EndGlobal
