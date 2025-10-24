@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XG8rHV0XqGE=",
+  "dgSpecHash": "lMp7iNgjfec=",
   "success": true,
-  "projectFilePath": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\InstaJobApi\\InstaJobApi.csproj",
+  "projectFilePath": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\GraduationProjectApi\\GraduationProjectApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\x1\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.8\\microsoft.aspnetcore.openapi.9.0.8.nupkg.sha512",
     "C:\\Users\\x1\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.10\\microsoft.entityframeworkcore.9.0.10.nupkg.sha512",

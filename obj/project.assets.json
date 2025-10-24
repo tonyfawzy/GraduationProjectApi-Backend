@@ -1141,11 +1141,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\InstaJobApi\\InstaJobApi.csproj",
-      "projectName": "InstaJobApi",
-      "projectPath": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\InstaJobApi\\InstaJobApi.csproj",
+      "projectUniqueName": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\GraduationProjectApi\\GraduationProjectApi.csproj",
+      "projectName": "GraduationProjectApi",
+      "projectPath": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\GraduationProjectApi\\GraduationProjectApi.csproj",
       "packagesPath": "C:\\Users\\x1\\.nuget\\packages\\",
-      "outputPath": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\InstaJobApi\\obj\\",
+      "outputPath": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\GraduationProjectApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\x1\\AppData\\Roaming\\NuGet\\NuGet.Config"
