@@ -56,6 +56,10 @@
               "target": "Package",
               "version": "[9.0.10, )"
             },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
             "NSwag.AspNetCore": {
               "target": "Package",
               "version": "[14.6.1, )"
