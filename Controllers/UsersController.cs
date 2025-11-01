@@ -84,7 +84,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         var securityToken = tokenHandler.CreateToken(tokenDescriptor);
         var accessToken = tokenHandler.WriteToken(securityToken);
 
-        return Ok(new { AccessToken = accessToken, UserId = user.UserId, Fullname = user.Fullname });
+        return Ok(new { token = accessToken, UserId = user.UserId, Fullname = user.Fullname });
     }
 
     [HttpGet("getAllUsers")]
