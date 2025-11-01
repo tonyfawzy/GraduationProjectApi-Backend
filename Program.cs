@@ -32,7 +32,18 @@ builder.Services.AddAuthentication()
             IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtOptions.Key)),
             ValidateLifetime = true,
         };
-        
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                if (context.Request.Headers.ContainsKey("token"))
+                {
+                    context.Token = context.Request.Headers["token"];
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 var app = builder.Build();
