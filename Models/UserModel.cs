@@ -5,7 +5,7 @@ namespace GraduationProjectApi.Models;
 public class User
 {
     [Required]
-    public Guid UserId { get; set; }
+    public string UserId { get; set; } = Guid.NewGuid().ToString();
 
     [Required, MaxLength(70)]
     public required string Fullname { get; set; }
@@ -18,8 +18,9 @@ public class User
 
     [Required]
     public required string PasswordHash { get; set; }
+    public int Permission { get; set; } = 0;
 
-    [MaxLength(1)]
+    [MaxLength(6)]
     public string? Gender { get; set; }
 
     [DataType(DataType.Date)]
