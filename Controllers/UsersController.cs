@@ -91,6 +91,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         {
             code = 200,
             msg = "Login successful",
+            userId = user.UserId,
             token = accessToken
         });
     }
