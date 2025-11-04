@@ -29,30 +29,33 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             u.PhoneNumber == RegDto.PhoneNumber || u.SecondPhoneNumber == RegDto.PhoneNumber);
 
         if (isPhoneNumberExists)
-            return BadRequest(new { error = "Phone number already in use." });
+            return BadRequest(new
+            {
+                code = 400,
+                error = "Phone number already in use."
+            });
 
         var user = new User
         {
-            //UserId = Guid.NewGuid(),
             Fullname = RegDto.Fullname,
             PhoneNumber = RegDto.PhoneNumber,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(RegDto.Password),
             Gender = string.IsNullOrWhiteSpace(RegDto.Gender) ? null : RegDto.Gender,
             DateOfBirth = RegDto.DateOfBirth,
-            //ProfileImageUrl = string.IsNullOrWhiteSpace(RegDto.ProfileImageUrl) ? null : RegDto.ProfileImageUrl,
             Bio = string.IsNullOrWhiteSpace(RegDto.Bio) ? null : RegDto.Bio,
             Email = string.IsNullOrWhiteSpace(RegDto.Email) ? null : RegDto.Email,
             NormalizedEmail = string.IsNullOrWhiteSpace(RegDto.Email) ? null : RegDto.Email.ToUpperInvariant(),
             CreatedAt = DateTime.UtcNow
         };
 
-      
-
-
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync();
 
-        return Ok(new { message = "User registered successfully." });
+        return Ok(new
+        {
+            code = 200,
+            msg = "User registered successfully."
+        });
     }
 
 
@@ -84,16 +87,46 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         var securityToken = tokenHandler.CreateToken(tokenDescriptor);
         var accessToken = tokenHandler.WriteToken(securityToken);
 
-        return Ok(new { token = accessToken, UserId = user.UserId, Fullname = user.Fullname });
+        return Ok(new
+        {
+            code = 200,
+            msg = "Login successful",
+            token = accessToken
+        });
     }
 
     [HttpGet("getAllUsers")]
-    public async Task<IEnumerable<User>> GetUsersAsync()
+    public async Task<IActionResult> GetUsersAsync()
     {
-        return await _dbContext.Users.ToListAsync();
+        var users = await _dbContext.Users
+            .Include(u => u.Services)
+                .ThenInclude(s => s.Location)
+            .Include(u => u.Services)
+                .ThenInclude(s => s.Trade)
+            .ToListAsync();
+
+        var result = users.Select(user => new
+        {
+            user.UserId,
+            user.Fullname,
+            user.PhoneNumber,
+            user.Email,
+            user.Bio,
+            user.ProfileImageUrl,
+            Services = user.Services.Select(service => new
+            {
+                service.ServiceId,
+                service.ServiceName,
+                service.Description,
+                TradeName = service.Trade.TradeName,
+                LocationName = service.Location.City 
+            })
+        });
+
+        return Ok(result);
     }
 
-    [HttpGet("myInfo")]
+    [HttpGet("getInfo")]
     [Authorize]
     public async Task<IActionResult> GetMyInfoAsync()
     {
@@ -108,120 +141,35 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         if (user == null)
         {
-            return NotFound(new { error = "User not found." });
-        }
-
-        return Ok(new { user });
-
-
-    }
-
-    [HttpPut("update-bio")]
-    [Authorize]
-    public async Task<IActionResult> UpdateBio([FromBody] string newBio)
-    {
-        if (newBio.Length > 250)
-        {
-            return BadRequest(new { error = "Bio cannot exceed 250 characters." });
-        }
-
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-        if (userIdClaim == null)
-        {
-            return Unauthorized(new { error = "Invalid token." });
-        }
-
-        var userId = userIdClaim.Value;
-
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
-        if (user == null)
-        {
-            return NotFound(new { error = "User not found." });
-        }
-
-        user.Bio = newBio;
-        _dbContext.Users.Update(user);
-        await _dbContext.SaveChangesAsync();
-
-        return Ok(new { message = "Success", Bio = user.Bio });
-    }
-
-
-
-    [HttpPut("update-second-phone")]
-    [Authorize]
-    public async Task<IActionResult> UpdateSecondPhone([FromBody] string newSecondPhone)
-    {
-        if (newSecondPhone.Length > 15)
-        {
-            return BadRequest(new { error = "Second Phone cannot exceed 15 characters." });
-        }
-
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-        if (userIdClaim == null)
-        {
-            return Unauthorized(new { error = "Invalid token." });
-        }
-
-        var userId = userIdClaim.Value;
-
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
-        if (user == null)
-        {
-            return NotFound(new { error = "User not found." });
-        }
-
-        user.SecondPhoneNumber = newSecondPhone;
-        _dbContext.Users.Update(user);
-        await _dbContext.SaveChangesAsync();
-
-        return Ok(new { message = "Success", SecondPhone = user.SecondPhoneNumber });
-    }
-
-    [HttpPut("update-profile-image")]
-    [Authorize]
-    public async Task<IActionResult> UpdateProfileImage([FromForm] IFormFile ProfileImage)
-    {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-        if (userIdClaim == null)
-        {
-            return Unauthorized(new { error = "Invalid token." });
-        }
-
-        var userId = userIdClaim.Value;
-
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
-        if (user == null)
-        {
-            return NotFound(new { error = "User not found." });
-        }
-
-        if (ProfileImage != null)
-        {
-            // Define the uploads folder path
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-            if (!Directory.Exists(uploadsFolder))
+            return NotFound(new
             {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            var fileName = $"{Guid.NewGuid()}_{ProfileImage.FileName}";
-            var filePath = Path.Combine(uploadsFolder, fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await ProfileImage.CopyToAsync(stream);
-            }
-
-            // Update the user's ProfileImageUrl
-            user.ProfileImageUrl = $"/uploads/{fileName}";
-            _dbContext.Users.Update(user);
-            await _dbContext.SaveChangesAsync();
-
-            return Ok(new { message = "Profile image updated successfully.", ProfileImageUrl = user.ProfileImageUrl });
+                code = 404,
+                error = "User not found."
+            });
         }
 
-        return BadRequest(new { error = "No profile image provided." });
+        var result = new
+        {
+            userId = user.UserId,
+            fullName = user.Fullname,
+            phoneNumber = user.PhoneNumber,
+            secondPhoneNumber = user.SecondPhoneNumber,
+            permission = (user.Permission == 0) ? "User" : "Admin",
+            gender = user.Gender,
+            dateOfBirth = user.DateOfBirth,
+            profileImage = user.ProfileImageUrl,
+            bio = user.Bio,
+            email = user.Email,
+            isSuspended = user.IsSuspended,
+            createdAt = user.CreatedAt
+        };
+
+        return Ok(new
+        {
+            code = 200,
+            msg = "Success",
+            data = result 
+        });
     }
 
     [HttpPatch("update-profile")]
@@ -260,7 +208,6 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             user.Bio = updateDto.Bio;
         }
 
-        // Update Second Phone Number if provided
         if (!string.IsNullOrWhiteSpace(updateDto.SecondPhoneNumber))
         {
             if (updateDto.SecondPhoneNumber.Length > 15)
@@ -270,17 +217,15 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             user.SecondPhoneNumber = updateDto.SecondPhoneNumber;
         }
 
-        // Update Profile Image if provided
         if (ProfileImage != null)
         {
-            // Define the uploads folder path
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "pfps");
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
             }
 
-            var fileName = $"{Guid.NewGuid()}_{ProfileImage.FileName}";
+            var fileName = $"{Guid.NewGuid()}";
             var filePath = Path.Combine(uploadsFolder, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -288,11 +233,9 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
                 await ProfileImage.CopyToAsync(stream);
             }
 
-            // Update the user's ProfileImageUrl
-            user.ProfileImageUrl = $"/uploads/{fileName}";
+            user.ProfileImageUrl = $"/uploads/pfps/{fileName}";
         }
 
-        // Save changes to the database
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
 
@@ -321,13 +264,21 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         if (user == null)
         {
-            return NotFound(new { error = "User not found." });
+            return NotFound(new
+            {
+                code = 404,
+                msg = "User not found." 
+            });
         }
 
         _dbContext.Users.Remove(user);
         await _dbContext.SaveChangesAsync();
 
-        return Ok(new { message = "Your account has been deleted successfully." });
+        return Ok(new
+        {
+            code = 200,
+            msg = "Your account has been deleted successfully."
+        });
     }
 
 }
