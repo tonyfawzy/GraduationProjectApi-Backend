@@ -31,7 +31,6 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         if (isPhoneNumberExists)
             return BadRequest(new
             {
-                code = 400,
                 error = "Phone number already in use."
             });
 
@@ -53,8 +52,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
 
         return Ok(new
         {
-            code = 200,
-            msg = "User registered successfully."
+            message = "User registered successfully."
         });
     }
 
@@ -87,11 +85,21 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         var securityToken = tokenHandler.CreateToken(tokenDescriptor);
         var accessToken = tokenHandler.WriteToken(securityToken);
 
+        var userDto = new
+        {
+            userId = user.UserId,
+            fullname = user.Fullname,
+            phoneNumber = user.PhoneNumber,
+            role = (user.Permission == 0) ? "User" : "Admin",
+            email = user.Email,
+            bio = user.Bio,
+            profileImageUrl = user.ProfileImageUrl
+        };
+
         return Ok(new
         {
-            code = 200,
-            msg = "Login successful",
-            userId = user.UserId,
+            message = "Login successful",
+            user = userDto,
             token = accessToken
         });
     }
