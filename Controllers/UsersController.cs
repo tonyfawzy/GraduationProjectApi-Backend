@@ -41,7 +41,6 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(RegDto.Password),
             Gender = string.IsNullOrWhiteSpace(RegDto.Gender) ? null : RegDto.Gender,
             DateOfBirth = RegDto.DateOfBirth,
-            Bio = string.IsNullOrWhiteSpace(RegDto.Bio) ? null : RegDto.Bio,
             Email = string.IsNullOrWhiteSpace(RegDto.Email) ? null : RegDto.Email,
             NormalizedEmail = string.IsNullOrWhiteSpace(RegDto.Email) ? null : RegDto.Email.ToUpperInvariant(),
             CreatedAt = DateTime.UtcNow
@@ -161,7 +160,6 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         {
             return NotFound(new
             {
-                code = 404,
                 error = "User not found."
             });
         }
@@ -184,8 +182,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
 
         return Ok(new
         {
-            code = 200,
-            msg = "Success",
+            message = "Success",
             data = result
         });
     }

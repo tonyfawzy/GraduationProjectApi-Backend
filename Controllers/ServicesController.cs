@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace GraduationProjectApi.Controllers;
 
 [ApiController]
-[Route("service")]
+[Route("services")]
 public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
@@ -34,7 +34,7 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
     public async Task<IActionResult> AddService([FromBody] AddServiceDto serviceDto)
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-        if (userIdClaim == null || !User.Identity.IsAuthenticated)
+        if (userIdClaim == null)
         {
             return Unauthorized(new { error = "Invalid token." });
         }
@@ -75,6 +75,18 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
         {
             message = "Service added successfully.",
             ServiceId = service.ServiceId
+        });
+    }
+    
+    [HttpGet("locations")]
+    [Authorize]
+    public async Task<IActionResult> GetLocations()
+    {
+        var locations = await _dbContext.Locations.ToListAsync();
+        return Ok( new
+        {
+            message = "Success",
+            data = locations
         });
     }
 }

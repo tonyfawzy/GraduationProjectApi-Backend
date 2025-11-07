@@ -26,8 +26,6 @@ public class RegisterUserDto
 
     //public string? ProfileImageUrl { get; set; }
 
-    [MaxLength(250)]
-    public string? Bio { get; set; }
     public string? Email { get; set; }
 }
 
@@ -62,7 +60,8 @@ public class UpdateUserInfoDto
     public string? Gender { get; set; }
 
     public DateTime? DateOfBirth { get; set; }
-
+    
+    [MaxLength(250)]
     public string? Bio { get; set; }
 
     public string? Email { get; set; }
