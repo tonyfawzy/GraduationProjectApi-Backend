@@ -34,7 +34,7 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
     public async Task<IActionResult> AddService([FromBody] AddServiceDto serviceDto)
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-        if (userIdClaim == null)
+        if (userIdClaim == null || !User.Identity.IsAuthenticated)
         {
             return Unauthorized(new { error = "Invalid token." });
         }
