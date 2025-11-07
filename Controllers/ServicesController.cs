@@ -11,7 +11,24 @@ namespace GraduationProjectApi.Controllers;
 public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
-    
+
+    /*
+        [HttpPost("delete")]
+        [Authorize]
+        public async Task<IActionResult> DeleteService()
+        {
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new { error = "Invalid token." });
+            }
+
+            var userId = userIdClaim.Value;
+
+
+        }
+    */
+
     [HttpPost("add")]
     [Authorize]
     public async Task<IActionResult> AddService([FromBody] AddServiceDto serviceDto)
@@ -28,9 +45,8 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
         if (trade == null)
         {
             return BadRequest(new
-            { 
-                code = 400,
-                error = "Invalid trade ID." 
+            {
+                error = "Invalid trade ID."
             });
         }
 
@@ -39,7 +55,6 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
         {
             return BadRequest(new
             {
-                code = 400,
                 error = "Invalid location ID."
             });
         }
@@ -58,7 +73,6 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
 
         return Ok(new
         {
-            code = 200,
             message = "Service added successfully.",
             ServiceId = service.ServiceId
         });

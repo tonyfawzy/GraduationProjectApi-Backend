@@ -12,11 +12,11 @@ using System.Net.Http.Headers;
 namespace GraduationProjectApi.Controllers;
 
 [ApiController]
-[Route("user")]
-public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbContext) : ControllerBase
+[Route("auth")]
+public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContext) : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
-
+    
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto RegDto)
     {
@@ -103,6 +103,15 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             token = accessToken
         });
     }
+}
+
+[ApiController]
+[Route("user")]
+public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbContext) : ControllerBase
+{
+    private readonly ApplicationDbContext _dbContext = dbContext;
+
+
 
     [HttpGet("getAllUsers")]
     public async Task<IActionResult> GetUsersAsync()
@@ -128,7 +137,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
                 service.ServiceName,
                 service.Description,
                 TradeName = service.Trade.TradeName,
-                LocationName = service.Location.City 
+                LocationName = service.Location.City
             })
         });
 
@@ -177,7 +186,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         {
             code = 200,
             msg = "Success",
-            data = result 
+            data = result
         });
     }
 
@@ -275,8 +284,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         {
             return NotFound(new
             {
-                code = 404,
-                msg = "User not found." 
+                message = "User not found."
             });
         }
 
@@ -285,8 +293,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
 
         return Ok(new
         {
-            code = 200,
-            msg = "Your account has been deleted successfully."
+            message = "Your account has been deleted successfully."
         });
     }
 
