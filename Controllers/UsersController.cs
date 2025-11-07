@@ -128,6 +128,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             user.Fullname,
             user.PhoneNumber,
             user.Email,
+            user.DateOfBirth,
             user.Bio,
             user.ProfileImageUrl,
             Services = user.Services.Select(service => new
