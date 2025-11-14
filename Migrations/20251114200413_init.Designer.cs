@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GraduationProjectApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251104113044_init")]
+    [Migration("20251114200413_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -24,37 +24,19 @@ namespace GraduationProjectApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GraduationProjectApi.Models.Location", b =>
-                {
-                    b.Property<string>("LocationId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("LocationId");
-
-                    b.ToTable("Locations");
-                });
-
             modelBuilder.Entity("GraduationProjectApi.Models.Service", b =>
                 {
                     b.Property<string>("ServiceId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsPromoted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LocationId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ServiceName")
                         .IsRequired()
@@ -64,19 +46,11 @@ namespace GraduationProjectApi.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("TradeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ServiceId");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("TradeId");
 
                     b.HasIndex("UserId");
 
@@ -103,19 +77,37 @@ namespace GraduationProjectApi.Migrations
                     b.ToTable("ServiceImages");
                 });
 
-            modelBuilder.Entity("GraduationProjectApi.Models.Trade", b =>
+            modelBuilder.Entity("GraduationProjectApi.Models.ServiceTag", b =>
                 {
-                    b.Property<string>("TradeId")
+                    b.Property<string>("ServiceId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("TradeName")
+                    b.Property<string>("TagId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ServiceId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ServiceTags");
+                });
+
+            modelBuilder.Entity("GraduationProjectApi.Models.Tag", b =>
+                {
+                    b.Property<string>("TagId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("TagName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("TradeId");
+                    b.HasKey("TagId");
 
-                    b.ToTable("Trades");
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("GraduationProjectApi.Models.User", b =>
@@ -127,8 +119,8 @@ namespace GraduationProjectApi.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -179,27 +171,11 @@ namespace GraduationProjectApi.Migrations
 
             modelBuilder.Entity("GraduationProjectApi.Models.Service", b =>
                 {
-                    b.HasOne("GraduationProjectApi.Models.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GraduationProjectApi.Models.Trade", "Trade")
-                        .WithMany()
-                        .HasForeignKey("TradeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("GraduationProjectApi.Models.User", "User")
                         .WithMany("Services")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Location");
-
-                    b.Navigation("Trade");
 
                     b.Navigation("User");
                 });
@@ -215,9 +191,35 @@ namespace GraduationProjectApi.Migrations
                     b.Navigation("Service");
                 });
 
+            modelBuilder.Entity("GraduationProjectApi.Models.ServiceTag", b =>
+                {
+                    b.HasOne("GraduationProjectApi.Models.Service", "Service")
+                        .WithMany("ServiceTags")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GraduationProjectApi.Models.Tag", "Tag")
+                        .WithMany("ServiceTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Service");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("GraduationProjectApi.Models.Service", b =>
                 {
                     b.Navigation("ServiceImages");
+
+                    b.Navigation("ServiceTags");
+                });
+
+            modelBuilder.Entity("GraduationProjectApi.Models.Tag", b =>
+                {
+                    b.Navigation("ServiceTags");
                 });
 
             modelBuilder.Entity("GraduationProjectApi.Models.User", b =>

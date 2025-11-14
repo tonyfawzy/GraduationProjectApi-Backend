@@ -12,27 +12,16 @@ namespace GraduationProjectApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Locations",
+                name: "Tags",
                 columns: table => new
                 {
-                    LocationId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    TagId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TagName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CreatedAt = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Locations", x => x.LocationId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Trades",
-                columns: table => new
-                {
-                    TradeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TradeName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Trades", x => x.TradeId);
+                    table.PrimaryKey("PK_Tags", x => x.TagId);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,7 +41,7 @@ namespace GraduationProjectApi.Migrations
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     IsSuspended = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,26 +57,12 @@ namespace GraduationProjectApi.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsPromoted = table.Column<bool>(type: "bit", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TradeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LocationId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    CreatedAt = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Services", x => x.ServiceId);
-                    table.ForeignKey(
-                        name: "FK_Services_Locations_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Locations",
-                        principalColumn: "LocationId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Services_Trades_TradeId",
-                        column: x => x.TradeId,
-                        principalTable: "Trades",
-                        principalColumn: "TradeId",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Services_Users_UserId",
                         column: x => x.UserId,
@@ -115,25 +90,44 @@ namespace GraduationProjectApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ServiceTags",
+                columns: table => new
+                {
+                    ServiceId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TagId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceTags", x => new { x.ServiceId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_ServiceTags_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "ServiceId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ServiceTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "TagId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ServiceImages_ServiceId",
                 table: "ServiceImages",
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Services_LocationId",
-                table: "Services",
-                column: "LocationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Services_TradeId",
-                table: "Services",
-                column: "TradeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Services_UserId",
                 table: "Services",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServiceTags_TagId",
+                table: "ServiceTags",
+                column: "TagId");
         }
 
         /// <inheritdoc />
@@ -143,13 +137,13 @@ namespace GraduationProjectApi.Migrations
                 name: "ServiceImages");
 
             migrationBuilder.DropTable(
+                name: "ServiceTags");
+
+            migrationBuilder.DropTable(
                 name: "Services");
 
             migrationBuilder.DropTable(
-                name: "Locations");
-
-            migrationBuilder.DropTable(
-                name: "Trades");
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "Users");

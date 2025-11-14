@@ -18,11 +18,13 @@ public class RegisterUserDto
     [RegularExpression(@"^[a-zA-Z0-9]{6,23}$", ErrorMessage = "Password must be 6-23 characters long and contain only letters and numbers")]
     public string Password { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "Gender is required")]
     [MaxLength(6)]
     [RegularExpression("^(Male|Female)$", ErrorMessage = "Gender must be 'Male', or 'Female'.")]
-    public string? Gender { get; set; }
+    public string Gender { get; set; }
 
-    public DateTime? DateOfBirth { get; set; }
+    [Required(ErrorMessage = "Date of birth is required")]
+    public DateTime DateOfBirth { get; set; }
 
     //public string? ProfileImageUrl { get; set; }
 
@@ -60,7 +62,7 @@ public class UpdateUserInfoDto
     public string? Gender { get; set; }
 
     public DateTime? DateOfBirth { get; set; }
-    
+
     [MaxLength(250)]
     public string? Bio { get; set; }
 

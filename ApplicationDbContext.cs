@@ -11,8 +11,8 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Service> Services { get; set; }
-    public DbSet<Trade> Trades { get; set; }
-    public DbSet<Location> Locations { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<ServiceTag> ServiceTags { get; set; }
     public DbSet<ServiceImage> ServiceImages { get; set; }
 
 
@@ -26,19 +26,25 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(si => si.ServiceId);
 
         modelBuilder.Entity<Service>()
-            .HasOne(t => t.Trade)
-            .WithMany()
-            .HasForeignKey(t => t.TradeId);
+            .HasOne(s => s.User)
+            .WithMany(u => u.Services)
+            .HasForeignKey(s => s.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Service>()
-            .HasOne(l => l.Location)
-            .WithMany()
-            .HasForeignKey(l => l.LocationId);
-        
-        modelBuilder.Entity<Service>()
-            .HasOne(u => u.User)
-            .WithMany(us => us.Services)
-            .HasForeignKey(u => u.UserId);
+        modelBuilder.Entity<ServiceTag>()
+            .HasKey(st => new { st.ServiceId, st.TagId });
+
+        modelBuilder.Entity<ServiceTag>()
+            .HasOne(st => st.Service)
+            .WithMany(s => s.ServiceTags)
+            .HasForeignKey(st => st.ServiceId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ServiceTag>()
+            .HasOne(st => st.Tag)
+            .WithMany(t => t.ServiceTags)
+            .HasForeignKey(st => st.TagId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     

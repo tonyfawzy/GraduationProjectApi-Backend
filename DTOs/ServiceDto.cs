@@ -12,9 +12,5 @@ public class AddServiceDto
     [MaxLength(500)]
     public string? Description { get; set; }
 
-    [Required]
-    public string TradeId { get; set; }
-
-    [Required]
-    public string LocationId { get; set; }
+    public List<string>? Tags { get; set; }
 }

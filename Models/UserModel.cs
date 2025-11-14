@@ -42,7 +42,7 @@ public class User
     public bool IsSuspended { get; set; } = false;
 
     [Required]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public long CreatedAt { get; set; } = DateTimeOffset.Now.ToUnixTimeSeconds();
 
     public ICollection<Service> Services { get; set; }
 }

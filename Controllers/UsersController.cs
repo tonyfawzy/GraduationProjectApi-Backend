@@ -43,7 +43,6 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
             DateOfBirth = RegDto.DateOfBirth,
             Email = string.IsNullOrWhiteSpace(RegDto.Email) ? null : RegDto.Email,
             NormalizedEmail = string.IsNullOrWhiteSpace(RegDto.Email) ? null : RegDto.Email.ToUpperInvariant(),
-            CreatedAt = DateTime.UtcNow
         };
 
         _dbContext.Users.Add(user);
@@ -92,7 +91,8 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
             role = (user.Permission == 0) ? "User" : "Admin",
             email = user.Email,
             bio = user.Bio,
-            profileImageUrl = user.ProfileImageUrl
+            profileImageUrl = user.ProfileImageUrl,
+            //services = user.Services
         };
 
         return Ok(new
@@ -117,9 +117,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
     {
         var users = await _dbContext.Users
             .Include(u => u.Services)
-                .ThenInclude(s => s.Location)
-            .Include(u => u.Services)
-                .ThenInclude(s => s.Trade)
+                .ThenInclude(s => s.ServiceTags)
             .ToListAsync();
 
         var result = users.Select(user => new
@@ -136,8 +134,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
                 service.ServiceId,
                 service.ServiceName,
                 service.Description,
-                TradeName = service.Trade.TradeName,
-                LocationName = service.Location.City
+                ServiceTags = service.ServiceTags.Select(st => st.Tag.TagName).ToList(),
             })
         });
 

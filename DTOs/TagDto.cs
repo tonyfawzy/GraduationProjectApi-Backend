@@ -2,10 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GraduationProjectApi.DTOs;
 
-public class LocationDTO
+public class AddTagDTO
 {
-    [Required(ErrorMessage = "City is required")]
-    [StringLength(30, MinimumLength = 2, ErrorMessage = "City must be between 2 and 30 characters")]
+    [Required(ErrorMessage = "Tag name is required")]
+    [StringLength(30, MinimumLength = 2, ErrorMessage = "Tag must be between 2 and 30 characters")]
     [RegularExpression(@"^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$", ErrorMessage = "\"^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$\"")]
-    public string City { get; set; }
+    public string TagName { get; set; }
 }
