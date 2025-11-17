@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using GraduationProjectApi.DTOs;
+using GraduationProjectApi.DTOs.Auth;
 using Microsoft.AspNetCore.Authorization;
 using YamlDotNet.Core.Tokens;
 using System.Net.Http.Headers;
@@ -63,7 +64,6 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
     {
         try {
 
-        
         var user = await _dbContext.Users
         .Include(a => a.Address)
         .FirstOrDefaultAsync(u => u.PhoneNumber == LogDto.PhoneNumber);
@@ -99,7 +99,7 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
             role = (user.Permission == 0) ? "User" : "Admin",
             gender = user.Gender,
             dateOfBirth = user.DateOfBirth,
-            address = user.Address.Governorate,
+            address = user.Address != null ? user.Address.Governorate : null,
             profileImage = user.ProfileImage,
             bio = user.Bio,
             balance = user.Balance,
@@ -119,7 +119,7 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
     } catch  (DbUpdateException ex) {
         return StatusCode(500, new { error = "An error occurred while accessing the database.", details = ex.Message });
     } catch (Exception ex) {
-        return StatusCode(500, new { error = "An unexpected error occurred.", details = ex.Message });
+        return StatusCode(500, new { error = "An unexpected error occurred.", details = ex.Message } );
     }
     }
 }
