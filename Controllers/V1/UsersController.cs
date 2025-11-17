@@ -191,6 +191,8 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             user.UserId,
             user.Fullname,
             user.PhoneNumber,
+            user.SecondPhoneNumber,
+            role = (user.Permission == 0) ? "User" : "Admin",
             user.Email,
             user.DateOfBirth,
             user.Bio,

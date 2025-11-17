@@ -84,6 +84,7 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
             await _dbContext.SaveChangesAsync();
         }
 */
+
         if (serviceDto.ServiceImages != null && serviceDto.ServiceImages.Any())
         {
              var folderPath = Path.Combine("wwwroot", "service", service.ServiceId, "images");   

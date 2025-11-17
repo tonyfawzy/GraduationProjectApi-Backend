@@ -9,6 +9,7 @@ This project uses the following NuGet packages:
 - BCrypt.Net-Next
 - SixLabors.ImageSharp
 - Microsoft.AspNetCore.Mvc.Versioning
+- Imagekit
 
 
 Install via CLI:
@@ -21,4 +22,5 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet add package BCrypt.Net-Next
 dotnet add package SixLabors.ImageSharp
 dotnet add package Microsoft.AspNetCore.Mvc.Versioning
+dotnet add package Imagekit
 ```
