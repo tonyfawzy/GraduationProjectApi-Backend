@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace GraduationProjectApi.Controllers;
+namespace GraduationProjectApi.Controllers.V1;
 [ApiController]
 [Route("tags")]
 public class TagsController(ApplicationDbContext dbContext) : ControllerBase
