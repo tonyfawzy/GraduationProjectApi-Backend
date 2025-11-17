@@ -275,7 +275,9 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
 
         var userId = userIdClaim.Value;
 
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+        var user = await _dbContext.Users
+            .Include(a => a.Address)
+            .FirstOrDefaultAsync(u => u.UserId == userId);
         if (user == null)
         {
             return NotFound(new { error = "User not found." });
@@ -306,6 +308,29 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
                 return BadRequest(new { error = "Second phone number cannot exceed 15 characters." });
             }
             user.SecondPhoneNumber = updateDto.SecondPhoneNumber;
+        }
+
+        if (!string.IsNullOrWhiteSpace(updateDto.Address))
+        {
+            if (updateDto.Address.Length > 150)
+            {
+                return BadRequest(new { error = "Address cannot exceed 150 characters." });
+            }
+
+            if (user.Address == null)
+            {
+                var address = new Address
+                {
+                    Governorate = updateDto.Address
+                };
+                user.Address = address;
+                _dbContext.Addresses.Add(address);
+            }
+            else
+            {
+                user.Address.Governorate = updateDto.Address;
+                _dbContext.Addresses.Update(user.Address);
+            }
         }
 
         if (ProfileImage != null)
@@ -365,7 +390,8 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             Fullname = user.Fullname,
             Bio = user.Bio,
             SecondPhoneNumber = user.SecondPhoneNumber,
-            ProfileImage = user.ProfileImage
+            ProfileImage = user.ProfileImage,
+            Address = user.Address.Governorate
         });
     }
 

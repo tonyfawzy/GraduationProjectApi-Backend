@@ -25,6 +25,9 @@ public class UpdateUserInfoDto
     public string? Bio { get; set; }
 
     public string? Email { get; set; }
+
+    [MaxLength(150)]
+    public string? Address { get; set; }
 }
 
 /*
