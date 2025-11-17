@@ -151,7 +151,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             user.DateOfBirth,
             user.Bio,
             user.ProfileImage,
-            user.Address.Governorate,
+            address = user.Address != null ? user.Address.Governorate : null,
             user.Balance,
             Services = user.Services.Select(service => new
             {
