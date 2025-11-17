@@ -61,7 +61,9 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
     [HttpPost("login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginUserDto LogDto)
     {
+        try {
 
+        
         var user = await _dbContext.Users
         .Include(a => a.Address)
         .FirstOrDefaultAsync(u => u.PhoneNumber == LogDto.PhoneNumber);
@@ -114,6 +116,11 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
             user = userDto,
             token = accessToken
         });
+    } catch  (DbUpdateException ex) {
+        return StatusCode(500, new { error = "An error occurred while accessing the database.", details = ex.Message });
+    } catch (Exception ex) {
+        return StatusCode(500, new { error = "An unexpected error occurred.", details = ex.Message });
+    }
     }
 }
 
