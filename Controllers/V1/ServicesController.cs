@@ -7,17 +7,6 @@ using Microsoft.EntityFrameworkCore;
 namespace GraduationProjectApi.Controllers.V1;
 
 [ApiController]
-[Route("test")]
-public class TestController : ControllerBase
-{
-    [HttpGet]
-    public IActionResult Get()
-    {
-        return Ok(new { message = "API is working!" });
-    }
-}
-
-[ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/services")]
 public class ServicesController(ApplicationDbContext dbContext) : ControllerBase

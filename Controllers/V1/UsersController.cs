@@ -47,10 +47,6 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
             DateOfBirth = RegDto.DateOfBirth,
             Email = string.IsNullOrWhiteSpace(RegDto.Email) ? null : RegDto.Email,
             NormalizedEmail = string.IsNullOrWhiteSpace(RegDto.Email) ? null : RegDto.Email.ToUpperInvariant(),
-            Address = new Address
-            {
-                Governorate = RegDto.Address
-            }
         };
 
         _dbContext.Users.Add(user);
