@@ -27,8 +27,6 @@ public class RegisterUserDto
     public DateTime DateOfBirth { get; set; }
     public string? Email { get; set; }
 
-    [Required(ErrorMessage = "Address is required")]
-    public string Address { get; set; } = string.Empty;
 }
 
 
