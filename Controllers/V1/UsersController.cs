@@ -58,8 +58,7 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
         });
     }
 
-    [HttpPost]
-    [Route("login")]
+    [HttpPost("login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginUserDto LogDto)
     {
 
