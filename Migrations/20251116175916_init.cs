@@ -36,8 +36,9 @@ namespace GraduationProjectApi.Migrations
                     Permission = table.Column<int>(type: "int", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ProfileImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfileImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Bio = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    Balance = table.Column<double>(type: "float", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     IsSuspended = table.Column<bool>(type: "bit", nullable: false),
@@ -49,12 +50,32 @@ namespace GraduationProjectApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    AddressId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Governorate = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.AddressId);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Services",
                 columns: table => new
                 {
                     ServiceId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ServiceName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Rating = table.Column<double>(type: "float", nullable: false),
                     IsPromoted = table.Column<bool>(type: "bit", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<long>(type: "bigint", nullable: false),
@@ -115,6 +136,12 @@ namespace GraduationProjectApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Addresses_UserId",
+                table: "Addresses",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ServiceImages_ServiceId",
                 table: "ServiceImages",
                 column: "ServiceId");
@@ -133,6 +160,9 @@ namespace GraduationProjectApi.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Addresses");
+
             migrationBuilder.DropTable(
                 name: "ServiceImages");
 

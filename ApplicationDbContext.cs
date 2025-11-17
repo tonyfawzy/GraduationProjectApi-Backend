@@ -10,6 +10,7 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Address> Addresses { get; set; }
     public DbSet<Service> Services { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<ServiceTag> ServiceTags { get; set; }
@@ -19,6 +20,12 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Address)
+            .WithOne(a => a.User)
+            .HasForeignKey<Address>(a => a.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ServiceImage>()
             .HasOne(si => si.Service)

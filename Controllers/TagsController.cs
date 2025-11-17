@@ -12,7 +12,7 @@ public class TagsController(ApplicationDbContext dbContext) : ControllerBase
     private readonly ApplicationDbContext _dbContext = dbContext;
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddTag([FromBody] AddTagDTO tagDto)
     {
         if (!ModelState.IsValid)

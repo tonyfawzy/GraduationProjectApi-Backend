@@ -10,6 +10,7 @@ public class Service
     [Required, MaxLength(150)]
     public required string ServiceName { get; set; }
     public string? Description { get; set; }
+    public double Rating { get; set; } = 0.0;
     public bool IsPromoted { get; set; } = false;
     public int Status { get; set; } = 1;
     public long CreatedAt { get; set; } = DateTimeOffset.Now.ToUnixTimeSeconds();
@@ -18,6 +19,6 @@ public class Service
     public string UserId { get; set; }
     public User User { get; set; }
 
-    public ICollection<ServiceTag> ServiceTags { get; set; } = new List<ServiceTag>();
+    public ICollection<ServiceTag> ServiceTags { get; set; }
     public ICollection<ServiceImage> ServiceImages { get; set; }
 }

@@ -21,6 +21,28 @@ namespace GraduationProjectApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("GraduationProjectApi.Models.Address", b =>
+                {
+                    b.Property<string>("AddressId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Governorate")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AddressId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("GraduationProjectApi.Models.Service", b =>
                 {
                     b.Property<string>("ServiceId")
@@ -34,6 +56,9 @@ namespace GraduationProjectApi.Migrations
 
                     b.Property<bool>("IsPromoted")
                         .HasColumnType("bit");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
 
                     b.Property<string>("ServiceName")
                         .IsRequired()
@@ -112,6 +137,9 @@ namespace GraduationProjectApi.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<double>("Balance")
+                        .HasColumnType("float");
+
                     b.Property<string>("Bio")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
@@ -154,7 +182,7 @@ namespace GraduationProjectApi.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<string>("ProfileImageUrl")
+                    b.Property<string>("ProfileImage")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecondPhoneNumber")
@@ -164,6 +192,17 @@ namespace GraduationProjectApi.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("GraduationProjectApi.Models.Address", b =>
+                {
+                    b.HasOne("GraduationProjectApi.Models.User", "User")
+                        .WithOne("Address")
+                        .HasForeignKey("GraduationProjectApi.Models.Address", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GraduationProjectApi.Models.Service", b =>
@@ -221,6 +260,9 @@ namespace GraduationProjectApi.Migrations
 
             modelBuilder.Entity("GraduationProjectApi.Models.User", b =>
                 {
+                    b.Navigation("Address")
+                        .IsRequired();
+
                     b.Navigation("Services");
                 });
 #pragma warning restore 612, 618

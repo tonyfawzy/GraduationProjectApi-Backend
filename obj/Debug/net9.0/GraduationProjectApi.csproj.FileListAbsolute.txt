@@ -181,3 +181,5 @@ D:\08-LastYear\GP\Backend\InstaJob\GraduationProjectApi\obj\Debug\net9.0\refint\
 D:\08-LastYear\GP\Backend\InstaJob\GraduationProjectApi\obj\Debug\net9.0\GraduationProjectApi.pdb
 D:\08-LastYear\GP\Backend\InstaJob\GraduationProjectApi\obj\Debug\net9.0\GraduationProjectApi.genruntimeconfig.cache
 D:\08-LastYear\GP\Backend\InstaJob\GraduationProjectApi\obj\Debug\net9.0\ref\GraduationProjectApi.dll
+D:\08-LastYear\GP\Backend\InstaJob\GraduationProjectApi\bin\Debug\net9.0\SixLabors.ImageSharp.dll
+D:\08-LastYear\GP\Backend\InstaJob\GraduationProjectApi\bin\Debug\net9.0\Microsoft.AspNetCore.Mvc.Versioning.dll

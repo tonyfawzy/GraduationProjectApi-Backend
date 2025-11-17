@@ -27,10 +27,12 @@ public class User
     [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
     public DateTime? DateOfBirth { get; set; }
 
-    public string? ProfileImageUrl { get; set; }
+    public string? ProfileImage { get; set; }
 
     [MaxLength(250)]
     public string? Bio { get; set; }
+
+    public double Balance { get; set; } = 0.0;
 
     [EmailAddress]
     [MaxLength(100)]
@@ -44,5 +46,6 @@ public class User
     [Required]
     public long CreatedAt { get; set; } = DateTimeOffset.Now.ToUnixTimeSeconds();
 
+    public Address Address { get; set; } = null!;
     public ICollection<Service> Services { get; set; }
 }
