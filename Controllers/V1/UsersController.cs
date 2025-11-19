@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using GraduationProjectApi.DTOs;
 using GraduationProjectApi.DTOs.Auth;
+using GraduationProjectApi.DTOs.User;
 using Microsoft.AspNetCore.Authorization;
 using YamlDotNet.Core.Tokens;
 using System.Net.Http.Headers;
@@ -295,6 +296,59 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             user.Fullname = updateDto.Fullname;
         }
 
+        if (!string.IsNullOrWhiteSpace(updateDto.PhoneNumber))
+        {
+            if (updateDto.PhoneNumber.Length > 15)
+            {
+                return BadRequest(new { error = "Phone number cannot exceed 15 characters." });
+            }
+
+            var isPhoneNumberExists = await _dbContext.Users.AnyAsync(u =>
+            u.PhoneNumber == updateDto.PhoneNumber || u.SecondPhoneNumber == updateDto.PhoneNumber);
+
+            if (isPhoneNumberExists)
+            return BadRequest(new
+            {
+                error = "Phone number already in use."
+            });
+
+            user.PhoneNumber = updateDto.PhoneNumber;
+        }
+
+        if (!string.IsNullOrWhiteSpace(updateDto.SecondPhoneNumber))
+        {
+            if (updateDto.SecondPhoneNumber.Length > 15)
+            {
+                return BadRequest(new { error = "Second phone number cannot exceed 15 characters." });
+            }
+
+            var isPhoneNumberExists = await _dbContext.Users.AnyAsync(u =>
+            u.PhoneNumber == updateDto.SecondPhoneNumber || u.SecondPhoneNumber == updateDto.SecondPhoneNumber);
+
+            if (isPhoneNumberExists)
+            return BadRequest(new
+            {
+                error = "Phone number already in use."
+            });
+            
+            user.SecondPhoneNumber = updateDto.SecondPhoneNumber;
+        }
+
+        if (!string.IsNullOrWhiteSpace(updateDto.Gender))
+        {
+            if (updateDto.Gender != "Male" && updateDto.Gender != "Female")
+            {
+                return BadRequest(new { error = "Gender must be 'Male' or 'Female'." });
+            }
+
+            user.Gender = updateDto.Gender;
+        }
+
+        if (updateDto.DateOfBirth.HasValue)
+        {
+            user.DateOfBirth = updateDto.DateOfBirth;
+        }
+
         if (!string.IsNullOrWhiteSpace(updateDto.Bio))
         {
             if (updateDto.Bio.Length > 250)
@@ -304,13 +358,10 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             user.Bio = updateDto.Bio;
         }
 
-        if (!string.IsNullOrWhiteSpace(updateDto.SecondPhoneNumber))
+        if (!string.IsNullOrWhiteSpace(updateDto.Email))
         {
-            if (updateDto.SecondPhoneNumber.Length > 15)
-            {
-                return BadRequest(new { error = "Second phone number cannot exceed 15 characters." });
-            }
-            user.SecondPhoneNumber = updateDto.SecondPhoneNumber;
+            user.Email = updateDto.Email;
+            user.NormalizedEmail = updateDto.Email.ToUpperInvariant();
         }
 
         if (!string.IsNullOrWhiteSpace(updateDto.Address))
@@ -390,11 +441,24 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         return Ok(new
         {
             message = "Profile updated successfully.",
-            Fullname = user.Fullname,
-            Bio = user.Bio,
-            SecondPhoneNumber = user.SecondPhoneNumber,
-            ProfileImage = user.ProfileImage,
-            Address = user.Address.Governorate
+            data = new
+            {
+                userId = user.UserId,
+                fullname = user.Fullname,
+                phoneNumber = user.PhoneNumber,
+                secondPhoneNumber = user.SecondPhoneNumber,
+                email = user.Email,
+                role = (user.Permission == 0) ? "User" : "Admin",
+                gender = user.Gender,
+                dateOfBirth = user.DateOfBirth,
+                address = user.Address?.Governorate,
+                profileImage = user.ProfileImage,
+                bio = user.Bio,
+                balance = user.Balance,
+                isSuspended = user.IsSuspended,
+                createdAt = user.CreatedAt
+            }
+
         });
     }
 

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace GraduationProjectApi.DTOs;
+namespace GraduationProjectApi.DTOs.User;
 
 
 public class UpdateUserInfoDto
@@ -17,6 +17,8 @@ public class UpdateUserInfoDto
     [RegularExpression(@"^\+\d{1,14}$", ErrorMessage = "Phone number must start with '+' and contain only digits")]
     public string? SecondPhoneNumber { get; set; }
 
+    [MaxLength(6)]
+    [RegularExpression("^(Male|Female)$", ErrorMessage = "Gender must be 'Male', or 'Female'.")]
     public string? Gender { get; set; }
 
     public DateTime? DateOfBirth { get; set; }

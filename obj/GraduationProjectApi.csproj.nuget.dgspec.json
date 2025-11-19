@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\08-LastYear\\GP\\Backend\\InstaJob\\GraduationProjectApi\\GraduationProjectApi.csproj": {}
+    "D:\\08-LastYear\\GP\\Backend\\InstaWork\\GraduationProjectApi\\GraduationProjectApi.csproj": {}
   },
   "projects": {
-    "D:\\08-LastYear\\GP\\Backend\\InstaJob\\GraduationProjectApi\\GraduationProjectApi.csproj": {
+    "D:\\08-LastYear\\GP\\Backend\\InstaWork\\GraduationProjectApi\\GraduationProjectApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\GraduationProjectApi\\GraduationProjectApi.csproj",
+        "projectUniqueName": "D:\\08-LastYear\\GP\\Backend\\InstaWork\\GraduationProjectApi\\GraduationProjectApi.csproj",
         "projectName": "GraduationProjectApi",
-        "projectPath": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\GraduationProjectApi\\GraduationProjectApi.csproj",
+        "projectPath": "D:\\08-LastYear\\GP\\Backend\\InstaWork\\GraduationProjectApi\\GraduationProjectApi.csproj",
         "packagesPath": "C:\\Users\\x1\\.nuget\\packages\\",
-        "outputPath": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\GraduationProjectApi\\obj\\",
+        "outputPath": "D:\\08-LastYear\\GP\\Backend\\InstaWork\\GraduationProjectApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\x1\\AppData\\Roaming\\NuGet\\NuGet.Config"

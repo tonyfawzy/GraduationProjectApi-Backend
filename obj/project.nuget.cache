@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xu3uSW7bPrs=",
+  "dgSpecHash": "npktYek49fQ=",
   "success": true,
-  "projectFilePath": "D:\\08-LastYear\\GP\\Backend\\InstaJob\\GraduationProjectApi\\GraduationProjectApi.csproj",
+  "projectFilePath": "D:\\08-LastYear\\GP\\Backend\\InstaWork\\GraduationProjectApi\\GraduationProjectApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\x1\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\x1\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
