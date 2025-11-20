@@ -93,11 +93,12 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
         var userDto = new
         {
             userId = user.UserId,
+            role = (user.Permission == 0) ? "User" : "Admin",
+            /*
             fullname = user.Fullname,
             phoneNumber = user.PhoneNumber,
             secondPhoneNumber = user.SecondPhoneNumber,
             email = user.Email,
-            role = (user.Permission == 0) ? "User" : "Admin",
             gender = user.Gender,
             dateOfBirth = user.DateOfBirth,
             address = user.Address != null ? user.Address.Governorate : null,
@@ -109,6 +110,7 @@ public class AuthController(JwtOptions jwtOptions, ApplicationDbContext dbContex
 
             
             createdAt = user.CreatedAt,
+            */
         };
 
         return Ok(new
