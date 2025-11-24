@@ -139,7 +139,7 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
             .Include(u => u.User)
             .ToListAsync();
 
-        var result = services.Select(service => new
+        var data = services.Select(service => new
         {
             service.ServiceId,
             service.ServiceName,
@@ -158,10 +158,7 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
         return Ok(new
         {   
             message = "Services retrieved successfully.",
-            data = new 
-            {
-                result
-            }
+            data
         });
         
     }
