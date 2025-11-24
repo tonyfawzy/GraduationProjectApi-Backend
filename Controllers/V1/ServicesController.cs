@@ -130,9 +130,45 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
         });
     }
     
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllServicesAsync()
+    {
+        var services = await _dbContext.Services
+            .Include(s => s.ServiceImages)
+            .Include(u => u.User)
+            .ToListAsync();
+
+        var result = services.Select(service => new
+        {
+            service.ServiceId,
+            service.ServiceName,
+            service.Description,
+            serviceImages = service.ServiceImages.Select(img => img.ServiceImageUrl).ToList(),
+            User = service.User == null ? null : new
+            {
+                service.User.UserId,
+                service.User.Fullname,
+                service.User.ProfileImage
+            },
+
+            service.CreatedAt
+        });
+
+        return Ok(new
+        {   
+            message = "Services retrieved successfully.",
+            data = new 
+            {
+                result
+            }
+        });
+        
+    }
+
     [HttpGet("{serviceId}")]
     //[Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetServiceById([FromRoute] string serviceId)
+    public async Task<IActionResult> GetServiceByIdAsync([FromRoute] string serviceId)
     {
         var service = await _dbContext.Services
             .Include(s => s.User)

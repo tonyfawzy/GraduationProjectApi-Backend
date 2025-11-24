@@ -142,6 +142,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             .Include(u => u.Services)
                 .ThenInclude(s => s.ServiceTags)
                     .ThenInclude(st => st.Tag)
+                    
             .Include(a => a.Address)
             .ToListAsync();
 
@@ -161,6 +162,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
                 service.ServiceId,
                 service.ServiceName,
                 service.Description,
+                ServiceImages = service.ServiceImages.Select(img => img.ServiceImageUrl).ToList(),
                 ServiceTags = (service.ServiceTags ?? Enumerable.Empty<ServiceTag>())
                     .Select(st => new
                     {
@@ -202,6 +204,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             user.Gender,
             user.ProfileImage,
             address = user.Address != null ? user.Address.Governorate : null,
+            /*
             Services = user.Services.Select(service => new
             {
                 service.ServiceId,
@@ -213,7 +216,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
                         st.TagId,
                         tagName = st.Tag != null ? st.Tag.TagName : null
                     })
-            })
+            })*/
         };
 
         return Ok(
