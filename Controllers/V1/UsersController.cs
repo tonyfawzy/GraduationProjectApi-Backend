@@ -272,6 +272,48 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         });
     }
 */
+
+
+ [HttpGet("{userId}/services")]
+    public async Task<IActionResult> GetUserServicesByIdAsync([FromRoute] string userId)
+    {
+        var user = await _dbContext.Users
+            .Include(u => u.Services)
+                .ThenInclude(s => s.ServiceImages)
+            .FirstOrDefaultAsync(u => u.UserId == userId);
+
+        if (user == null)
+        {
+            return NotFound(new { error = "User not found." });
+        }
+
+        var services = user.Services.Select(service => new
+        {
+            service.ServiceId,
+            service.ServiceName,
+            service.Description,
+            serviceImages = service.ServiceImages.Select(img => img.ServiceImageUrl).ToList(),
+            service.CreatedAt,
+            User = new
+            {
+                user.UserId,
+                user.Fullname,
+                user.ProfileImage
+            }
+        });
+
+        return Ok(new
+        {
+            message = "User services retrieved successfully.",
+            data = new
+            {
+                userId = user.UserId,
+                fullname = user.Fullname,
+                services
+            }
+        });
+    }
+    
     [HttpPatch]
     [Authorize]
     public async Task<IActionResult> UpdateProfileAsync([FromForm] UpdateUserInfoDto updateDto, [FromForm] IFormFile? ProfileImage)
@@ -498,3 +540,5 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
     }
 
 }
+
+   
