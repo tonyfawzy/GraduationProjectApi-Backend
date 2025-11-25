@@ -294,12 +294,14 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             service.Description,
             serviceImages = service.ServiceImages.Select(img => img.ServiceImageUrl).ToList(),
             service.CreatedAt,
+            /*
             User = new
             {
                 user.UserId,
                 user.Fullname,
                 user.ProfileImage
             }
+            */
         });
 
         return Ok(new
