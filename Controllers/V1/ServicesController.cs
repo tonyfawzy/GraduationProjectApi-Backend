@@ -149,7 +149,8 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
             {
                 service.User.UserId,
                 service.User.Fullname,
-                service.User.ProfileImage
+                service.User.ProfileImage,
+                address = service.User.Address != null ? service.User.Address.Governorate : null
             },
 
             service.CreatedAt
