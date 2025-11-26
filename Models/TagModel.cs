@@ -13,4 +13,6 @@ public class Tag
     public long CreatedAt { get; set; } = DateTimeOffset.Now.ToUnixTimeSeconds();
 
     public ICollection<ServiceTag> ServiceTags { get; set; } = new List<ServiceTag>();
+        public ICollection<ServiceRequestTag> ServiceRequestTags { get; set; } = new List<ServiceRequestTag>();
+
 }

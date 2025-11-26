@@ -48,4 +48,5 @@ public class User
 
     public Address Address { get; set; } = null!;
     public ICollection<Service> Services { get; set; }
+    public ICollection<ServiceRequest> ServiceRequests { get; set; }
 }

@@ -11,10 +11,16 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Address> Addresses { get; set; }
-    public DbSet<Service> Services { get; set; }
     public DbSet<Tag> Tags { get; set; }
+
+    public DbSet<Service> Services { get; set; }
     public DbSet<ServiceTag> ServiceTags { get; set; }
     public DbSet<ServiceImage> ServiceImages { get; set; }
+
+
+    public DbSet<ServiceRequest> ServiceRequests { get; set; }
+    public DbSet<ServiceRequestTag> ServiceRequestTags { get; set; }
+    public DbSet<ServiceRequestImage> ServiceRequestImages { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -52,6 +58,36 @@ public class ApplicationDbContext : DbContext
             .WithMany(t => t.ServiceTags)
             .HasForeignKey(st => st.TagId)
             .OnDelete(DeleteBehavior.Cascade);
+
+
+
+        modelBuilder.Entity<ServiceRequestImage>()
+            .HasOne(si => si.ServiceRequest)
+            .WithMany(s => s.ServiceRequestImages)
+            .HasForeignKey(si => si.ServReqId);
+
+        modelBuilder.Entity<ServiceRequest>()
+            .HasOne(s => s.User)
+            .WithMany(u => u.ServiceRequests)
+            .HasForeignKey(s => s.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ServiceRequestTag>()
+            .HasKey(st => new { st.ServReqId, st.TagId });
+
+        modelBuilder.Entity<ServiceRequestTag>()
+            .HasOne(st => st.ServiceRequest)
+            .WithMany(s => s.ServiceRequestTags)
+            .HasForeignKey(st => st.ServReqId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ServiceRequestTag>()
+            .HasOne(st => st.Tag)
+            .WithMany(t => t.ServiceRequestTags)
+            .HasForeignKey(st => st.TagId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            
     }
 
     
