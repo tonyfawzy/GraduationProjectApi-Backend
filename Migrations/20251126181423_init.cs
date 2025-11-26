@@ -69,6 +69,30 @@ namespace GraduationProjectApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ServiceRequests",
+                columns: table => new
+                {
+                    ServReqId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ServReqName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Budget = table.Column<double>(type: "float", nullable: false),
+                    IsPromoted = table.Column<bool>(type: "bit", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceRequests", x => x.ServReqId);
+                    table.ForeignKey(
+                        name: "FK_ServiceRequests_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Services",
                 columns: table => new
                 {
@@ -89,6 +113,49 @@ namespace GraduationProjectApi.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServiceRequestImages",
+                columns: table => new
+                {
+                    ServReqImageId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ServReqImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ServReqId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceRequestImages", x => x.ServReqImageId);
+                    table.ForeignKey(
+                        name: "FK_ServiceRequestImages_ServiceRequests_ServReqId",
+                        column: x => x.ServReqId,
+                        principalTable: "ServiceRequests",
+                        principalColumn: "ServReqId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServiceRequestTags",
+                columns: table => new
+                {
+                    ServReqId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TagId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceRequestTags", x => new { x.ServReqId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_ServiceRequestTags_ServiceRequests_ServReqId",
+                        column: x => x.ServReqId,
+                        principalTable: "ServiceRequests",
+                        principalColumn: "ServReqId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ServiceRequestTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "TagId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -147,6 +214,21 @@ namespace GraduationProjectApi.Migrations
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ServiceRequestImages_ServReqId",
+                table: "ServiceRequestImages",
+                column: "ServReqId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServiceRequests_UserId",
+                table: "ServiceRequests",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServiceRequestTags_TagId",
+                table: "ServiceRequestTags",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Services_UserId",
                 table: "Services",
                 column: "UserId");
@@ -167,7 +249,16 @@ namespace GraduationProjectApi.Migrations
                 name: "ServiceImages");
 
             migrationBuilder.DropTable(
+                name: "ServiceRequestImages");
+
+            migrationBuilder.DropTable(
+                name: "ServiceRequestTags");
+
+            migrationBuilder.DropTable(
                 name: "ServiceTags");
+
+            migrationBuilder.DropTable(
+                name: "ServiceRequests");
 
             migrationBuilder.DropTable(
                 name: "Services");

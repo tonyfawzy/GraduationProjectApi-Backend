@@ -66,6 +66,9 @@ public class ApplicationDbContext : DbContext
             .WithMany(s => s.ServiceRequestImages)
             .HasForeignKey(si => si.ServReqId);
 
+        modelBuilder.Entity<ServiceRequest>().HasKey(sr => sr.ServReqId);
+        modelBuilder.Entity<ServiceRequestImage>().HasKey(sri => sri.ServReqImageId);
+
         modelBuilder.Entity<ServiceRequest>()
             .HasOne(s => s.User)
             .WithMany(u => u.ServiceRequests)

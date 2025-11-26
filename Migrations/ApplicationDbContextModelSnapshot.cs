@@ -99,6 +99,77 @@ namespace GraduationProjectApi.Migrations
                     b.ToTable("ServiceImages");
                 });
 
+            modelBuilder.Entity("GraduationProjectApi.Models.ServiceRequest", b =>
+                {
+                    b.Property<string>("ServReqId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("Budget")
+                        .HasColumnType("float");
+
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPromoted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ServReqName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ServReqId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ServiceRequests");
+                });
+
+            modelBuilder.Entity("GraduationProjectApi.Models.ServiceRequestImage", b =>
+                {
+                    b.Property<string>("ServReqImageId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ServReqId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ServReqImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ServReqImageId");
+
+                    b.HasIndex("ServReqId");
+
+                    b.ToTable("ServiceRequestImages");
+                });
+
+            modelBuilder.Entity("GraduationProjectApi.Models.ServiceRequestTag", b =>
+                {
+                    b.Property<string>("ServReqId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TagId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ServReqId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ServiceRequestTags");
+                });
+
             modelBuilder.Entity("GraduationProjectApi.Models.ServiceTag", b =>
                 {
                     b.Property<string>("ServiceId")
@@ -227,6 +298,47 @@ namespace GraduationProjectApi.Migrations
                     b.Navigation("Service");
                 });
 
+            modelBuilder.Entity("GraduationProjectApi.Models.ServiceRequest", b =>
+                {
+                    b.HasOne("GraduationProjectApi.Models.User", "User")
+                        .WithMany("ServiceRequests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GraduationProjectApi.Models.ServiceRequestImage", b =>
+                {
+                    b.HasOne("GraduationProjectApi.Models.ServiceRequest", "ServiceRequest")
+                        .WithMany("ServiceRequestImages")
+                        .HasForeignKey("ServReqId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ServiceRequest");
+                });
+
+            modelBuilder.Entity("GraduationProjectApi.Models.ServiceRequestTag", b =>
+                {
+                    b.HasOne("GraduationProjectApi.Models.ServiceRequest", "ServiceRequest")
+                        .WithMany("ServiceRequestTags")
+                        .HasForeignKey("ServReqId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GraduationProjectApi.Models.Tag", "Tag")
+                        .WithMany("ServiceRequestTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ServiceRequest");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("GraduationProjectApi.Models.ServiceTag", b =>
                 {
                     b.HasOne("GraduationProjectApi.Models.Service", "Service")
@@ -253,8 +365,17 @@ namespace GraduationProjectApi.Migrations
                     b.Navigation("ServiceTags");
                 });
 
+            modelBuilder.Entity("GraduationProjectApi.Models.ServiceRequest", b =>
+                {
+                    b.Navigation("ServiceRequestImages");
+
+                    b.Navigation("ServiceRequestTags");
+                });
+
             modelBuilder.Entity("GraduationProjectApi.Models.Tag", b =>
                 {
+                    b.Navigation("ServiceRequestTags");
+
                     b.Navigation("ServiceTags");
                 });
 
@@ -262,6 +383,8 @@ namespace GraduationProjectApi.Migrations
                 {
                     b.Navigation("Address")
                         .IsRequired();
+
+                    b.Navigation("ServiceRequests");
 
                     b.Navigation("Services");
                 });
