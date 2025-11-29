@@ -195,6 +195,7 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
                 service.User.Fullname,
                 service.User.ProfileImage,
                 service.User.PhoneNumber,
+                service.User.SecondPhoneNumber,
                 service.User.Bio,
                 address = service.User.Address.Governorate
             },
