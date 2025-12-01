@@ -207,5 +207,28 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
 
         });
     }
+
+    [HttpDelete("{serviceId}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteServiceAsync([FromRoute] string serviceId)
+    {
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+            return Unauthorized(new { error = "Invalid token: missing user identifier claim." });
+
+        var userId = userIdClaim.Value;
+
+        var service = await _dbContext.Services.FirstOrDefaultAsync(s => s.ServiceId == serviceId);
+        if (service == null)
+            return NotFound(new { error = "Service not found." });
+
+        if (service.UserId != userId)
+            return Forbid();
+
+        _dbContext.Services.Remove(service);
+        await _dbContext.SaveChangesAsync();
+
+        return Ok(new { message = "Service deleted successfully." });
+    }
 }
 

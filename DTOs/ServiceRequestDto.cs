@@ -11,7 +11,8 @@ public class CreateServReqDto
 
     [MaxLength(500)]
     public string? Description { get; set; }
+    public double Budget { get; set; }
 
     //public List<string>? TagIds { get; set; }
-    public List<IFormFile>? ServiceRequestImages { get; set; }
+    //public List<IFormFile>? ServiceRequestImages { get; set; }
 }
