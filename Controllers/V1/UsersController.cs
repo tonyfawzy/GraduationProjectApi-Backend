@@ -140,13 +140,15 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
     {
         var users = await _dbContext.Users
             .Include(u => u.Services)
+            /*
                 .ThenInclude(s => s.ServiceTags)
                     .ThenInclude(st => st.Tag)
-                    
-            .Include(a => a.Address)
+              */      
+            //.Include(a => a.Address)
+            .Include(sr => sr.ServiceRequests)
             .ToListAsync();
 
-        var result = users.Select(user => new
+        var data = users.Select(user => new
         {
             user.UserId,
             user.Fullname,
@@ -155,7 +157,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             user.DateOfBirth,
             user.Bio,
             user.ProfileImage,
-            address = user.Address != null ? user.Address.Governorate : null,
+            //address = user.Address != null ? user.Address.Governorate : null,
             user.Balance,
             Services = user.Services.Select(service => new
             {
@@ -163,16 +165,26 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
                 service.ServiceName,
                 service.Description,
                 ServiceImages = service.ServiceImages.Select(img => img.ServiceImageUrl).ToList(),
+                /*
                 ServiceTags = (service.ServiceTags ?? Enumerable.Empty<ServiceTag>())
                     .Select(st => new
                     {
                         st.TagId,
                         tagName = st.Tag != null ? st.Tag.TagName : null
                     })
-            })
+                    */
+            }),
+
+            
         });
 
-        return Ok(result);
+        return Ok
+        ( new
+            {
+                message = "Users retrieved successfully.",
+                data
+            }
+        );
     }
 
     [HttpGet("{userId}")]
@@ -316,6 +328,48 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
         });
     }
     
+    
+    [HttpGet("{userId}/jobs")]
+    public async Task<IActionResult> GetServiceRequestsByUserIdAsync([FromRoute] string userId)
+    {
+        var user = await _dbContext.Users
+            .Include(u => u.ServiceRequests)
+            .FirstOrDefaultAsync(u => u.UserId == userId);
+
+        if (user == null)
+        {
+            return NotFound(new { error = "User not found." });
+        }
+
+        var jobs = user.ServiceRequests.Select(sr => new
+        {
+            sr.ServReqId,
+            sr.ServReqName,
+            sr.Description,
+            sr.CreatedAt,
+            /*
+            User = new
+            {
+                user.UserId,
+                user.Fullname,
+                user.ProfileImage
+            }
+            */
+        });
+
+        return Ok(new
+        {
+            message = "User jobs retrieved successfully.",
+            data = new
+            {
+                userId = user.UserId,
+                fullname = user.Fullname,
+                jobs
+            }
+        });
+    }
+
+
     [HttpPatch]
     [Authorize]
     public async Task<IActionResult> UpdateProfileAsync([FromForm] UpdateUserInfoDto updateDto, [FromForm] IFormFile? ProfileImage)

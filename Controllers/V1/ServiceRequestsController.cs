@@ -131,6 +131,7 @@ public class ServiceRequestsController(ApplicationDbContext dbContext) : Control
         });
     }
 
+
     [HttpGet]
     public async Task<IActionResult> GetAllServiceRequestsAsync()
     {
@@ -151,7 +152,6 @@ public class ServiceRequestsController(ApplicationDbContext dbContext) : Control
                 sr.User.ProfileImage,
                 address = sr.User.Address != null ? sr.User.Address.Governorate : null
             },
-
             sr.CreatedAt
         });
 
