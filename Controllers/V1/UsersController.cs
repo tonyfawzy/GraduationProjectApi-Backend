@@ -346,6 +346,7 @@ public class UsersController(JwtOptions jwtOptions, ApplicationDbContext dbConte
             sr.ServReqId,
             sr.ServReqName,
             sr.Description,
+            sr.Budget,
             sr.CreatedAt,
             /*
             User = new
