@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GraduationProjectApi.DTOs.User;
 
-
 public class UpdateUserInfoDto
 {
     [StringLength(70, MinimumLength = 3, ErrorMessage = "Fullname must be between 3 and 70 characters")]
@@ -31,10 +30,3 @@ public class UpdateUserInfoDto
     [MaxLength(150)]
     public string? Address { get; set; }
 }
-
-/*
-public class UpdateProfileImageDto
-{
-    public IFormFile ProfileImage { get; set; }
-}
-*/

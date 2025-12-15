@@ -209,7 +209,7 @@ public class ServicesController(ApplicationDbContext dbContext) : ControllerBase
     }
 
     [HttpDelete("{serviceId}")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteServiceAsync([FromRoute] string serviceId)
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
