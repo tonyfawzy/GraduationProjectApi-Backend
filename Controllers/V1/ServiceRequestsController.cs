@@ -164,7 +164,7 @@ public class ServiceRequestsController(ApplicationDbContext dbContext) : Control
 
 
     [HttpDelete("{servReqId}")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteServiceRequestAsync([FromRoute] string servReqId)
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
